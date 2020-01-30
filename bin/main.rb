@@ -3,6 +3,8 @@ require 'rest-client'
 require 'open-uri'
 require 'tty-prompt'
 
+require_relative '../lib/amazon.rb'
+
 #document = open('https://newyork.craigslist.org/search/ggg?query=computer%20gigs&sort=rel')
 
 #content = document.read
