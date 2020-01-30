@@ -3,6 +3,8 @@ require 'rest-client'
 require 'open-uri'
 require 'tty-prompt'
 
+require_relative '../lib/amazon.rb'
+
 #document = open('https://newyork.craigslist.org/search/ggg?query=computer%20gigs&sort=rel')
 
 #content = document.read
@@ -78,9 +80,13 @@ when choices[0]
     when choices[10]
       #Eletronics
     when choices[11]
-      #Generic
+      web = Amazon.new('something')
+    else
+      puts 'Anything'
     end
-
+  else
+    puts 'Anything'
+  end
     #Amazon End
   when choices[2]
     #Saraiva Start
@@ -92,11 +98,12 @@ when choices[0]
       puts
       puts 'Parsing Data...'
       puts 'Those are the Results'
-    when choices[1]
-
+    else
+      puts 'Error'
     end
-    #saraiva End
   else
+    puts 'Shit'
+    #saraiva End
   end
 
   #Normal Mode End
@@ -105,5 +112,4 @@ when choices[1]
 else
   puts 'Invalid entering: How did you do that ?'
 end
-
 

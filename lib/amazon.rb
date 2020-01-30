@@ -1,5 +1,13 @@
 class Amazon 
-  def initialize
-    
+  def initialize(website)
+    @website = website
   end
+
+  
+
+  end
+
+
+
+
 end
