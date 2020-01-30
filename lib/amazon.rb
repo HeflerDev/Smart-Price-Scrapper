@@ -5,9 +5,4 @@ class Amazon
 
   
 
-  end
-
-
-
-
 end

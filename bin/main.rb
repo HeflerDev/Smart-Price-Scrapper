@@ -81,6 +81,8 @@ when choices[0]
       #Eletronics
     when choices[11]
       #Generic
+    else
+      puts 'Whatevers'
     end
 
     #Amazon End
