@@ -38,10 +38,63 @@ answer = prompt.select(greeting, choices)
 case answer
 when choices[0]
   #Normal Mode Start
+  puts
   puts 'Choosed Normal Mode'
-  puts 'Choose one of the '
+  puts
+
+  choices = %w(MercadoLivre[Under_Development] Amazon Saraiva[Under_Development])
+  answer  = prompt.select('Choose one of the websites to scrap Data from: ',choices)
+
+  case answer
+  when choices[0]
+    puts 'Choosed MercadoLivre'
+  when choices[1]
+    puts 'Choosed Amazon'
+    choices = %w(Arts_&_Crafts Automotive Baby Beauty Books Boy's_Fashion Photograph Phones Computers Costumes Eletronics)
+    answer  = prompt.select('Choose a Category to Scrap !', choices)
+
+    case answer
+    when choices[0]
+      #Arts & crafts
+    when choices[1]
+      #Automotive
+    when choices[2]
+      #Baby
+    when choices[3]
+      #Beauty
+    when choices[4]
+      #books
+    when choices[5]
+      #Fashion
+    when choices[6]
+      #Photograph
+    when choices[7]
+      #Phones
+    when choices[8]
+      #Computers
+    when choices[9]
+      #Costumes
+    when choices[10]
+      #Eletronics
+    end
 
 
+  when choices[2]
+    #Saraiva Start
+    puts 'Choosed Saraiva'
+    choices = %w(Books)
+    answer  = prompt.select('Select a Category',choices)
+    case answer
+    when choices[0]
+      puts
+      puts 'Parsing Data...'
+      puts 'Those are the Results'
+    when choices[1]
+
+    end
+    #saraiva End
+  else
+  end
 
   #Normal Mode End
 when choices[1]
