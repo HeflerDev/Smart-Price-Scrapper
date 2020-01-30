@@ -49,8 +49,9 @@ when choices[0]
   when choices[0]
     puts 'Choosed MercadoLivre'
   when choices[1]
+    #Amazon Start
     puts 'Choosed Amazon'
-    choices = %w(Arts_&_Crafts Automotive Baby Beauty Books Boy's_Fashion Photograph Phones Computers Costumes Eletronics)
+    choices = %w(Arts_&_Crafts Automotive Baby Beauty Books Boy's_Fashion Photograph Phones Computers Costumes Eletronics Generic)
     answer  = prompt.select('Choose a Category to Scrap !', choices)
 
     case answer
@@ -76,9 +77,11 @@ when choices[0]
       #Costumes
     when choices[10]
       #Eletronics
+    when choices[11]
+      #Generic
     end
 
-
+    #Amazon End
   when choices[2]
     #Saraiva Start
     puts 'Choosed Saraiva'
