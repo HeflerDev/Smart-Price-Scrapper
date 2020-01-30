@@ -1,13 +1,11 @@
-#first import nokogiri
 require 'nokogiri'
-#then import rest-client
 require 'rest-client'
+require 'open-uri'
 
-html = RestClient.get('www.blackbytes.info')
-doc = Nokogiri::HTML.parse(html)
+#document = open('https://newyork.craigslist.org/search/ggg?query=computer%20gigs&sort=rel')
 
-articles = doc.css('.tve-post-grid-title')
+#content = document.read
 
-articles.each do |article|
-  p article.css('a').text
-end
+#parsed_content = Nokogiri::HTML(content)
+
+#parsed_content.css('example').first.inner_html
