@@ -25,79 +25,26 @@ puts
 
 prompt = TTY::Prompt.new
 greeting = 'Choose an option below'
-choices = %w(Normal_Mode Developer_Mode)
+choices = ['Search New', 'Access Databank']
 answer = prompt.select(greeting, choices)
 'do something' if answer == choices[0]
 
 case answer
 when choices[0]
-  #Normal Mode Start
-  puts
-  puts 'Choosed Normal Mode'
-  puts
-
-  choices = %w(MercadoLivre[Under_Development] Amazon Saraiva[Under_Development])
-  answer  = prompt.select('Choose one of the websites to scrap Data from: ',choices)
-
-  case answer
-  when choices[0]
-    puts 'Choosed MercadoLivre'
-  when choices[1]
-    #Amazon Start
-    puts 'Choosed Amazon'
-    choices = %w(Arts_&_Crafts Automotive Baby Beauty Books Boy's_Fashion Photograph Phones Computers Costumes Eletronics Generic)
-    answer  = prompt.select('Choose a Category to Scrap !', choices)
-
-    case answer
-    when choices[0]
-      #Arts & crafts
-    when choices[1]
-      #Automotive
-    when choices[2]
-      #Baby
-    when choices[3]
-      #Beauty
-    when choices[4]
-      #books
-    when choices[5]
-      #Fashion
-    when choices[6]
-      #Photograph
-    when choices[7]
-      #Phones
-    when choices[8]
-      #Computers
-    when choices[9]
-      #Costumes
-    when choices[10]
-      #Eletronics
-    when choices[11]
-      #Generic
-    else
-      puts 'Whatevers'
-    end
-
-    #Amazon End
-  when choices[2]
-    #Saraiva Start
-    puts 'Choosed Saraiva'
-    choices = %w(Books)
-    answer  = prompt.select('Select a Category',choices)
-    case answer
-    when choices[0]
-      puts
-      puts 'Parsing Data...'
-      puts 'Those are the Results'
-    when choices[1]
-
-    end
-    #saraiva End
-  else
+  #Search Mode Start
+  choices = ['Fast Search','Custom Search']
+  answer  = prompt.select('Select a Search Method', choices)
+  #Fast Search Code
+  if answer == choices[0]
+    puts
+    puts 'Type your Search'
+    search = gets.chomp
+    search.split('').each_with_index {|value, index| search[index] = '+' if value == ' '}
+    result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}")
+    result.display_results
   end
-
-  #Normal Mode End
 when choices[1]
-  puts 'Choosed Developer Mode'
+  
 else
   puts 'Invalid entering: How did you do that ?'
 end
