@@ -44,14 +44,14 @@ has_data = false
         puts 'Type your Search'
         search = gets.chomp
         search.split('').each_with_index {|value, index| search[index] = '+' if value == ' '}
-        result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}")
-        result.collect_data
+        result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search).collect_data
         puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
         gets.chomp
         has_data = true
         Gem.win_platform? ? (system "cls") : (system "clear")
       end
     else
+      puts KScrapper.class_variable_get(:@@prices_databank)
       if has_data
         gatter = false
       else
