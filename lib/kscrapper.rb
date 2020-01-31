@@ -5,12 +5,11 @@ class KScrapper
   def initialize(website)
     @website = open(website).read
     @parsed_content = Nokogiri::HTML(@website)
+    @brute_collect = []
+    @clean_values = []
   end
 
-  
-
-  def display_results
-    values = []
+  def collect_data
     puts "Search has Returned #{@parsed_content.css('.s-item__wrapper').length} results. Press enter to proceed."
     gets.chomp
 
@@ -26,20 +25,14 @@ class KScrapper
       puts price
       puts logistic
       puts sold
-      values.push(price)
+      @brute_collect.push(price)
     end
-    values.map do |x|
-      new = x.scan(/\d+[,.]\d+/).join(' to ')
-      puts new
+    @clean_values = @brute_collect.map do |x|
+      #This line Filters only numbers and punctuation
+      selector = x.scan(/\d+[,.]\d+/)
+      #This line transform the numbers into floats, and if the array size is bigger than 2, takes the average value
+      selector.to_s.split('').map {|x| x == ',' ? '.' : x}.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject{|x,y| (x+y)/2}
     end
   end
-
-  def retrieve_prices(string)
-    string.map {|x| x[/\d+/]}
-  end
-
 end
-
-scrap = KScrapper.new('https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2334524.m4084.l1311.R6.TR12.TRC2.A0.H0.Xheadphone.TRS1&_nkw=headphones+wireless&_osacat=619&_odkw=headphone&LH_TitleDesc=0&_sacat=0')
-scrap.display_results
 
