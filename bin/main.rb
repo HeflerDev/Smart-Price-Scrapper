@@ -52,7 +52,7 @@ while gatter
         puts 'Error : No item to Search' if search == ''
         puts 'Error : The search must start with characters between a and z' unless search =~ /^[a-z]/
         break unless search =~ /^[a-z]/
-        
+
         # Guarantee HTML adress Validation
         search.split('').each_with_index { |value, index| search[index] = '+' if value == ' ' }
         puts 'Searching ...'
