@@ -2,20 +2,22 @@ require 'nokogiri'
 require 'open-uri'
 
 class KScrapper 
+
+  attr_accessor :prices_databank
+
+  @@prices_databank = {}
+
   def initialize(website, search_term)
     @website = open(website).read
     @search_term = search_term
     @parsed_content = Nokogiri::HTML(@website)
     @brute_collect = []
     @clean_values = []
-
-    @@prices_databank = {}
   end
 #Function that Collects and return data in form of array.
   def collect_data
     puts "Search has Returned #{@parsed_content.css('.s-item__wrapper').length} results. Press enter to proceed."
     gets.chomp
-
     @parsed_content.css('.s-item__wrapper').each do |row|
       title   = row.css('.s-item__title').inner_text
       status  = row.css('.SECONDARY_INFO').inner_text
@@ -39,5 +41,12 @@ class KScrapper
     #This line Stores the Data on a Databank
     @@prices_databank[@search_term] = @clean_values
   end  
+  
+  def KScrapper.show_databank
+    @@prices_databank.each do |x, y|
+      puts '----------------------------------------------------------------------'
+      puts "#{x.capitalize} : #{y}"
+    end
+  end
 end
 

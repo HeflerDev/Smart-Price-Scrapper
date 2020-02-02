@@ -35,25 +35,32 @@ has_data = false
 
     
     if answer == choices[0]
-      #Search Mode Start
+      # Search Mode Start
       choices = ['Fast Search','Custom Search']
       answer  = prompt.select('Select a Search Method', choices)
-      #Fast Search Code
+      # Fast Search Code
       if answer == choices[0]
-        puts
-        puts 'Type your Search'
-        search = gets.chomp
-        search.split('').each_with_index {|value, index| search[index] = '+' if value == ' '}
-        result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search).collect_data
+        # Loop that validates Search
+        loop do
+          puts
+          puts 'Type your Search'
+          $search = gets.chomp.downcase
+          puts 'Error : No item to Search' if $search == ""
+          puts 'Error : The search must start with characters between a and z' unless $search =~ /^[a-z]/
+          break if $search =~ /^[a-z]/
+        end
+        # Guarantee HTML adress Validation
+        $search.split('').each_with_index {|value, index| search[index] = '+' if value == ' '}
+        puts 'Searching ...'
+        result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{$search}", $search).collect_data
         puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
         gets.chomp
         has_data = true
         Gem.win_platform? ? (system "cls") : (system "clear")
       end
     else
-      puts KScrapper.class_variable_get(:@@prices_databank)
       if has_data
-        gatter = false
+        KScrapper.show_databank
       else
         puts 'No data to Store'
         gets.chomp
