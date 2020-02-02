@@ -3,13 +3,7 @@ require 'rest-client'
 require 'open-uri'
 require 'tty-prompt'
 
-#document = open('https://newyork.craigslist.org/search/ggg?query=computer%20gigs&sort=rel')
-
-#content = document.read
-
-#parsed_content = Nokogiri::HTML(content)
-
-#parsed_content.css('example').first.inner_html
+require_relative '../lib/kscrapper.rb'
 
 #Welcome Section
 Gem.win_platform? ? (system "cls") : (system "clear")
@@ -29,81 +23,91 @@ puts " / ::::::::::::: \\                      =D-'"
 puts "|_________________|"
 puts
 
-prompt = TTY::Prompt.new
-greeting = 'Choose an option below'
-choices = %w(Normal_Mode Developer_Mode)
-answer = prompt.select(greeting, choices)
-'do something' if answer == choices[0]
+gatter = true
+has_data = false
 
-case answer
-when choices[0]
-  #Normal Mode Start
-  puts
-  puts 'Choosed Normal Mode'
-  puts
+  while gatter
+    prompt = TTY::Prompt.new
+    puts
+    greeting = 'Choose an option below'
+    choices = ['Search New', 'Access Databank']
+    answer = prompt.select(greeting, choices)
+    'do something' if answer == choices[0]
 
-  choices = %w(MercadoLivre[Under_Development] Amazon Saraiva[Under_Development])
-  answer  = prompt.select('Choose one of the websites to scrap Data from: ',choices)
+    if answer == choices[0]
+      # Search Mode Start
+      choices = ['Fast Search','Custom Search']
+      answer  = prompt.select('Select a Search Method', choices)
+      # Fast Search Code
+      if answer == choices[0]
+        # Loop that validates Search
+        loop do
+          puts
+          puts 'Type your Search'
+          $search = gets.chomp.downcase
+          puts 'Error : No item to Search' if $search == ""
+          puts 'Error : The search must start with characters between a and z' unless $search =~ /^[a-z]/
+          break if $search =~ /^[a-z]/ 
+        end
+        # Guarantee HTML adress Validation
+        $search.split('').each_with_index {|value, index| $search[index] = '+' if value == ' '}
+        puts 'Searching ...'
+        result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{$search}", $search).collect_data
+        puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
+        gets.chomp
+        has_data = true
+        Gem.win_platform? ? (system "cls") : (system "clear")
+      else
+        puts '===============================| UNAVAIABLE |=====================================.'
+        puts '|The Custom Search will be implemented shortly, it will come with features that   |'
+        puts '|takes searching parameters and return\'s the result based on what was chosen,    |'
+        puts '|like rating, costs, etc. Press enter to continue.                                |'
+        puts '==================================================================================:'
+        gets.chomp
+      end
 
-  case answer
-  when choices[0]
-    puts 'Choosed MercadoLivre'
-  when choices[1]
-    #Amazon Start
-    puts 'Choosed Amazon'
-    choices = %w(Arts_&_Crafts Automotive Baby Beauty Books Boy's_Fashion Photograph Phones Computers Costumes Eletronics Generic)
-    answer  = prompt.select('Choose a Category to Scrap !', choices)
+    else
 
-    case answer
-    when choices[0]
-      #Arts & crafts
-    when choices[1]
-      #Automotive
-    when choices[2]
-      #Baby
-    when choices[3]
-      #Beauty
-    when choices[4]
-      #books
-    when choices[5]
-      #Fashion
-    when choices[6]
-      #Photograph
-    when choices[7]
-      #Phones
-    when choices[8]
-      #Computers
-    when choices[9]
-      #Costumes
-    when choices[10]
-      #Eletronics
-    when choices[11]
-      #Generic
+      if has_data
+        choices = ['Data Parsed', 'Compute Data']
+        answer = prompt.select('What do you want to do ?', choices)
+
+        if answer == choices[0]
+          choices = ['Search Databank', 'Product Databank']
+          answer = prompt.select('Which of the Banks ?', choices)
+          if answer == choices[0]
+            KScrapper.show_databank(0)
+          else
+            KScrapper.show_databank(1)
+          end
+        else
+          choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
+          answer = prompt.select('Choose Operation', choices)
+
+          if answer == choices[0]
+            KScrapper.compute_average
+          
+          elsif answer == choices[1]
+            KScrapper.compute_biggest
+          else
+            KScrapper.compute_smallest
+          end  
+        
+        end
+
+      else
+        puts 'No data to Analyze'
+        gets.chomp
+      end
+
     end
 
-    #Amazon End
-  when choices[2]
-    #Saraiva Start
-    puts 'Choosed Saraiva'
-    choices = %w(Books)
-    answer  = prompt.select('Select a Category',choices)
-    case answer
-    when choices[0]
-      puts
-      puts 'Parsing Data...'
-      puts 'Those are the Results'
-    when choices[1]
-
-    end
-    #saraiva End
-  else
   end
 
-  #Normal Mode End
-when choices[1]
-  puts 'Choosed Developer Mode'
-else
-  puts 'Invalid entering: How did you do that ?'
-end
+puts "Operation terminated at #{Time.now}"
+gets.chomp
+
+
+
 
 
