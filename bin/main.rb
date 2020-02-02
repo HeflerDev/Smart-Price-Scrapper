@@ -106,8 +106,3 @@ has_data = false
 
 puts "Operation terminated at #{Time.now}"
 gets.chomp
-
-
-
-
-
