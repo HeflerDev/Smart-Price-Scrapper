@@ -84,7 +84,7 @@ has_data = false
           elsif answer == choices[1]
             KScrapper.compute_biggest
           else
-            p 'Not Ready'
+            KScrapper.compute_smallest
           end  
         
         end
