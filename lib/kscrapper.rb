@@ -8,6 +8,7 @@ class KScrapper
   @@prices_databank = {}
   @@name_databank = {}
   @@storage = {}
+  @@name_storage = {}
 
   def initialize(website, search_term)
     @website = open(website).read
@@ -36,19 +37,30 @@ class KScrapper
       @brute_collect.push(price)
     end
     @clean_values = @brute_collect.map do   |x|
-      #This line Filters only numbers and punctuation
-      selector = x.scan(/\d+[,.]\d+/).to_s.split('').map {|x| x == ',' ? '.' : x}.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject{|x,y| (x+y)/2}
-      #This line transform the numbers into floats, and if the array size is bigger than 2, takes the average value
+      #This line Filters only numbers and punctuation, transform the numbers into floats and if the array size is bigger than 2, takes the average value
+      filter_data = ->(x) { x.scan(/\d+[,.]\d+/).to_s.split('').map {|x| x == ',' ? '.' : x}.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject{|x,y| (x+y)/2}}
+      @@name_databank.map { |k, v| @@name_databank[k] = filter_data.call(x) }
+      filter_data.call(x)
+      #This line 
     end
     #This line Stores the Data on a Databank
     @@prices_databank[@search_term] = @clean_values
     
   end  
   
-  def KScrapper.show_databank
-    @@prices_databank.each do |x, y|
-      puts '----------------------------------------------------------------------'
-      puts " | #{x.capitalize} : #{y} | "
+  def KScrapper.show_databank(answer)
+
+    
+    if answer == 0
+      @@prices_databank.each do |x, y|
+        puts '----------------------------------------------------------------------'
+        puts " | #{x.capitalize} : #{y} | "
+      end
+    else
+      @@name_databank.each do |k, v| 
+        puts '----------------------------------------------------------------------'
+        puts " | #{k.capitalize} : #{v}"
+      end
     end
   end
 

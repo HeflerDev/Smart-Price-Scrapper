@@ -67,7 +67,13 @@ has_data = false
         answer = prompt.select('What do you want to do ?', choices)
 
         if answer == choices[0]
-          KScrapper.show_databank
+          choices = ['Search Databank', 'Product Databank']
+          answer = prompt.select('Which of the Banks ?', choices)
+          if answer == choices[0]
+            KScrapper.show_databank(0)
+          else
+            KScrapper.show_databank(1)
+          end
         else
           choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
           answer = prompt.select('Choose Operation', choices)
