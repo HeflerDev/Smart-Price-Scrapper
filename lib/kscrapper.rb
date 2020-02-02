@@ -30,7 +30,7 @@ class KScrapper
       price   = row.css('.s-item__price').inner_text
       logistic= row.css('.s-item__logisticsCost').inner_text
       sold    = row.css('.NEGATIVE').inner_text
-      puts '============================================================================='
+      puts '|=============================================================================|'
       puts title
       puts status
       puts price

@@ -47,9 +47,8 @@ has_data = false
           $search = gets.chomp.downcase
           puts 'Error : No item to Search' if $search == ""
           puts 'Error : The search must start with characters between a and z' unless $search =~ /^[a-z]/
-          break if $search =~ /^[a-z]/
+          break if $search =~ /^[a-z]/ 
         end
-
         # Guarantee HTML adress Validation
         $search.split('').each_with_index {|value, index| $search[index] = '+' if value == ' '}
         puts 'Searching ...'
@@ -58,11 +57,18 @@ has_data = false
         gets.chomp
         has_data = true
         Gem.win_platform? ? (system "cls") : (system "clear")
+      else
+        puts '===============================| UNAVAIABLE |=====================================.'
+        puts '|The Custom Search will be implemented shortly, it will come with features that   |'
+        puts '|takes searching parameters and return\'s the result based on what was chosen,    |'
+        puts '|like rating, costs, etc. Press enter to continue.                                |'
+        puts '==================================================================================:'
+        gets.chomp
       end
 
     else
 
-      #if has_data
+      if has_data
         choices = ['Data Parsed', 'Compute Data']
         answer = prompt.select('What do you want to do ?', choices)
 
@@ -89,10 +95,10 @@ has_data = false
         
         end
 
-      #else
-      #  puts 'No data to Store'
-      #  gets.chomp
-      #end
+      else
+        puts 'No data to Analyze'
+        gets.chomp
+      end
 
     end
 
