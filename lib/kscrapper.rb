@@ -6,6 +6,8 @@ class KScrapper
   attr_accessor :prices_databank
 
   @@prices_databank = {}
+  @@name_databank = {}
+  @@storage = {}
 
   def initialize(website, search_term)
     @website = open(website).read
@@ -30,23 +32,40 @@ class KScrapper
       puts price
       puts logistic
       puts sold
+      @@name_databank[title] = nil
       @brute_collect.push(price)
     end
     @clean_values = @brute_collect.map do   |x|
       #This line Filters only numbers and punctuation
-      selector = x.scan(/\d+[,.]\d+/)
+      selector = x.scan(/\d+[,.]\d+/).to_s.split('').map {|x| x == ',' ? '.' : x}.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject{|x,y| (x+y)/2}
       #This line transform the numbers into floats, and if the array size is bigger than 2, takes the average value
-      selector.to_s.split('').map {|x| x == ',' ? '.' : x}.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject{|x,y| (x+y)/2}
     end
     #This line Stores the Data on a Databank
     @@prices_databank[@search_term] = @clean_values
+    
   end  
   
   def KScrapper.show_databank
     @@prices_databank.each do |x, y|
       puts '----------------------------------------------------------------------'
-      puts "#{x.capitalize} : #{y}"
+      puts " | #{x.capitalize} : #{y} | "
     end
+  end
+
+  def KScrapper.compute_average
+    @@prices_databank.each do |key, value|
+      @@storage[key] = value.inject{ |x, y| x+y}/value.length
+      puts '----------------------------------------------------'
+      puts "#{key.capitalize} : #{@@storage[key]}"
+    end
+  end
+
+  def KScrapper.compute_biggest
+    @@prices_databank.each do |x, y|
+      puts '----------------------------------------------------------'
+      puts "The biggest value of #{x.capitalize} is #{y.max(1)}"
+    end
+    
   end
 end
 
