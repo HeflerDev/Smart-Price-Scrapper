@@ -11,7 +11,7 @@ require_relative 'str_content.rb'
 require_relative '../lib/kscrapper.rb'
 
 def validate_field(field)
-  puts 'Validating...'
+  puts 'Validating Field...'
   if field == ''
     puts 'Error : No item to Search' if field == ''
     puts 'Returning...'
@@ -24,10 +24,14 @@ def validate_field(field)
     true
   end
 end
-#
-def search_for(query)
 
+def validate_search(query)
+  puts 'Validating Input...'
+  result = query.split('').each_with_index { |value, index| result[index] = '+' if value == ' ' }
+  result
 end
+
+
 
 Gem.win_platform? ? (system 'cls') : (system 'clear')
 puts
@@ -60,10 +64,14 @@ when choices[0]
     puts 'Type your Search'
     search = gets.chomp.downcase
     break unless validate_field(search)
-    #Validates the Search
-    search.split('').each_with_index { |value, index| search[index] = '+' if value == ' ' }
+    
+    search = validate_search(search)
     puts 'Searching ...'
-    init = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search).collect_data
+    result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
+    result.collect_data
+    puts "The Search Found #{result.brute_collect.length} results.Press Enter to Continue..."
+    puts result.collect_data.title
+    gets.chomp
     puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
     gets.chomp
     has_data = true
