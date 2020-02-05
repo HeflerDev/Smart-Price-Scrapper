@@ -45,7 +45,6 @@ def new_search
     result.clean_data
     result.add_to_databank
     puts "Done Colecting Data, the Search Found #{result.brute_collect_values.length} results.Press Enter to Continue..."
-    result.clean_data
     gets.chomp
     break
   end
@@ -70,7 +69,7 @@ puts '|_________________|'
 puts 
 
 #Selection Menu
-
+loop do
 prompt = TTY::Prompt.new
 greeting = 'Choose an option below'
 choices = ['Search New', 'Access Databank']
@@ -79,9 +78,30 @@ answer = prompt.select(greeting, choices)
 case answer
 when choices[0]
   new_search
+
 when choices[1]
-  
+  choices = ['Data Parsed', 'Compute Data']
+  answer = prompt.select('What do you want to do ?', choices)
+  case answer
+  when choices[0]
+  when choices[1]
+    choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
+    answer = prompt.select('Choose Operation', choices)
+    case answer
+      
+    when choices[0]
+      KScrapper.compute_average
+      
+    when choices[1]
+      KScrapper.compute_max
+    else
+      
+    end
+  else
+    puts 'ERROR: BAD CODE'
+  end
 else
   puts 'ERROR: BAD CODE'
 end
 
+end

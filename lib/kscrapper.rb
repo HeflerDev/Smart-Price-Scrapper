@@ -26,8 +26,6 @@ class KScrapper
   end
 
   def collect_data
-    #Push value to maintain track of itens parse history
-    
     #Assign values to instance variables
     @parsed_content.css('.s-item__wrapper').each do |row|
       title = row.css('.s-item__title').inner_text
@@ -45,8 +43,8 @@ class KScrapper
   #Wipe the garbage from the number string to work it as floats
   def clean_data
     filter_data = lambda { |a| a.scan(/\d+[,.]\d+/).to_s.split('').map { |u| u == ',' ? '.' : u }.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject { |k, z| (k + z) / 2 } }
-    @clean_values.push(@brute_collect_values.map { |x| filter_data.call(x) } )
-    @clean_logistics.push(@brute_collect_logistics.map { |x| filter_data.call(x) } )
+    @clean_values = @brute_collect_values.map { |x| filter_data.call(x) } 
+    @clean_logistics = @brute_collect_logistics.map { |x| filter_data.call(x) } 
   end
 
   def add_to_databank
@@ -55,7 +53,18 @@ class KScrapper
   end
 
   def self.compute_average
-    res = @@products_databank.values.inject { |x,y| x + y } / @@products_databank.values.length
-    puts res ;
+    @@products_databank.map { |_,value| value.inject {|x,y| x+y} / value.length } 
+  end
+
+  def self.compute_max
+    puts @@products_databank.map do |x,y|
+      y.max
+    end
+  end
+
+  def self.compute_min
+    puts @@products_databank.map do |x,y|
+      y.min
+    end
   end
 end
