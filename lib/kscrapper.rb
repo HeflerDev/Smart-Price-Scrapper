@@ -8,6 +8,8 @@ class KScrapper
   attr_reader :brute_collect_values
 
   @@search_history = []
+  @@products_databank = {}
+
   
 
   def initialize(website, search_term)
@@ -23,11 +25,9 @@ class KScrapper
     @value_data = []
   end
 
-  # Method that Collects and return data in form of array.
-
   def collect_data
     #Push value to maintain track of itens parse history
-    @@search_history.push(@search_term)
+    
     #Assign values to instance variables
     @parsed_content.css('.s-item__wrapper').each do |row|
       title = row.css('.s-item__title').inner_text
@@ -42,10 +42,20 @@ class KScrapper
       @brute_collect_logistics.push(logistic)
     end
   end
-  #Wipe the garbage from the number to work it as floats
+  #Wipe the garbage from the number string to work it as floats
   def clean_data
     filter_data = lambda { |a| a.scan(/\d+[,.]\d+/).to_s.split('').map { |u| u == ',' ? '.' : u }.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject { |k, z| (k + z) / 2 } }
     @clean_values.push(@brute_collect_values.map { |x| filter_data.call(x) } )
     @clean_logistics.push(@brute_collect_logistics.map { |x| filter_data.call(x) } )
+  end
+
+  def add_to_databank
+    @@products_databank[@brute_collect_titles] = @clean_values
+    @@search_history.push(@search_term)
+  end
+
+  def self.compute_average
+    res = @@products_databank.values.inject { |x,y| x + y } / @@products_databank.values.length
+    puts res ;
   end
 end

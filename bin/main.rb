@@ -31,6 +31,25 @@ def validate_search(query)
   result
 end
 
+def new_search
+  loop do
+    puts
+    puts 'Type your Search'
+    search = gets.chomp.downcase
+    break unless validate_field(search)
+    
+    search = validate_search(search)
+    puts 'Searching ...'
+    result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
+    result.collect_data
+    result.clean_data
+    result.add_to_databank
+    puts "Done Colecting Data, the Search Found #{result.brute_collect_values.length} results.Press Enter to Continue..."
+    result.clean_data
+    gets.chomp
+    break
+  end
+end
 
 
 Gem.win_platform? ? (system 'cls') : (system 'clear')
@@ -59,26 +78,7 @@ answer = prompt.select(greeting, choices)
 
 case answer
 when choices[0]
-  loop do
-    puts
-    puts 'Type your Search'
-    search = gets.chomp.downcase
-    break unless validate_field(search)
-    
-    search = validate_search(search)
-    puts 'Searching ...'
-    result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
-    result.collect_data
-    puts "The Search Found #{result.brute_collect_values.length} results.Press Enter to Continue..."
-    result.collect_data
-    result.clean_data
-    gets.chomp
-    puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
-    gets.chomp
-    has_data = true
-    Gem.win_platform? ? (system 'cls') : (system 'clear')
-    break
-  end
+  new_search
 when choices[1]
   
 else
