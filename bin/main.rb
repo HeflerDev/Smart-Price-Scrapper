@@ -69,8 +69,9 @@ when choices[0]
     puts 'Searching ...'
     result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
     result.collect_data
-    puts "The Search Found #{result.brute_collect.length} results.Press Enter to Continue..."
-    puts result.collect_data.title
+    puts "The Search Found #{result.brute_collect_values.length} results.Press Enter to Continue..."
+    result.collect_data
+    result.clean_data
     gets.chomp
     puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
     gets.chomp

@@ -5,14 +5,10 @@ require 'open-uri'
 
 class KScrapper
   attr_accessor :prices_databank
-  attr_reader :brute_collect
+  attr_reader :brute_collect_values
 
-  @@prices_databank = {}
-  @@storage = {}
-  @@name_storage = {}
-  @@search_container = []
-
-  filter_data = lambda { |a| a.scan(/\d+[,.]\d+/).to_s.split('').map { |u| u == ',' ? '.' : u }.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject { |k, z| (k + z) / 2 }
+  @@search_history = []
+  
 
   def initialize(website, search_term)
     @website = open(website).read
@@ -22,6 +18,7 @@ class KScrapper
     @brute_collect_titles = []
     @brute_collect_logistics = []
     @clean_values = []
+    @clean_logistics = []
     @name_data = []
     @value_data = []
   end
@@ -29,9 +26,9 @@ class KScrapper
   # Method that Collects and return data in form of array.
 
   def collect_data
-    #push value to maintain track of what's happening
-    @@search_container.push(@search_term)
-  
+    #Push value to maintain track of itens parse history
+    @@search_history.push(@search_term)
+    #Assign values to instance variables
     @parsed_content.css('.s-item__wrapper').each do |row|
       title = row.css('.s-item__title').inner_text
       status = row.css('.SECONDARY_INFO').inner_text
@@ -42,16 +39,13 @@ class KScrapper
       #Instance Gattering
       @brute_collect_values.push(price)
       @brute_collect_titles.push(title)
-      @brute_collect_logistics
+      @brute_collect_logistics.push(logistic)
     end
   end
-
+  #Wipe the garbage from the number to work it as floats
   def clean_data
-    @brute_collect_values.map do |x|
-      @clean_values.push()
-      filter_data = ->(a) { } }
-      @value_data.push(filter_data.call(x))
-      filter_data.call(x)
-    end
+    filter_data = lambda { |a| a.scan(/\d+[,.]\d+/).to_s.split('').map { |u| u == ',' ? '.' : u }.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject { |k, z| (k + z) / 2 } }
+    @clean_values.push(@brute_collect_values.map { |x| filter_data.call(x) } )
+    @clean_logistics.push(@brute_collect_logistics.map { |x| filter_data.call(x) } )
   end
 end
