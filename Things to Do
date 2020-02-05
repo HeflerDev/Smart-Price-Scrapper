@@ -1,10 +1,7 @@
-I could not get your project running as I kept getting error. There is no gemfile and gemfile.lock in your project where you can require all the packages you're using from. 
-
-Please check to confirm you have pushed all your files.
 
 Your README.md file should contain information about setting up and running it as well.
 
-Not that you do have currently, but a .gitignore file should be in your project where you can add all the files you do not want to publish.
+
 
 It is a best practice to write tests for your methods.
 
