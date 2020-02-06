@@ -26,11 +26,6 @@ def validate_field(field)
   end
 end
 
-def validate_search(query)
-  puts 'Validating Input...'
-  result = query.split('').each_with_index { |value, index| result[index] = '+' if value == ' ' }
-end
-
 def new_search
   loop do
     puts
@@ -38,7 +33,7 @@ def new_search
     search = gets.chomp.downcase
     break unless validate_field(search)
     
-    search = validate_search(search)
+    search.split('').each_with_index { |value, index| search[index] = '+' if value == ' ' }
     puts 'Searching ...'
     result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
     result.collect_data
@@ -54,7 +49,7 @@ def find_average
   history = KScrapper.get_search_history
   KScrapper.get_databank.map.with_index do |(key, value), index | 
     puts '~~~~~~~~~~~~~~~~~~~~~~~~~'
-    puts "The average value of #{history[index].join.capitalize} is: #{value.inject{ |x, y| x+y} / value.length}."
+    puts "The average value of #{history[index].capitalize} is: #{value.inject{ |x, y| x+y} / value.length}."
   end
 end
 
@@ -62,7 +57,7 @@ def find_max
   history = KScrapper.get_search_history
   KScrapper.get_databank.each_with_index do |(x, y), z|
     index = y.index(y.max)
-    puts "=================================| #{history[z].join} |==============================="
+    puts "=================================| #{history[z]} |==============================="
     puts "The biggest value is : #{x[index].capitalize} that costs : #{y[index]}"
   end
 end
@@ -71,7 +66,7 @@ def find_min
   history = KScrapper.get_search_history
   KScrapper.get_databank.each_with_index do |(x, y), z|
     index = y.index(y.min)
-    puts "=================================| #{history[z].join} |==============================="
+    puts "=================================| #{history[z]} |==============================="
     puts "The biggest value is : #{x[index].capitalize} that costs : #{y[index]}"
   end
 end
@@ -81,7 +76,7 @@ def show_data
   KScrapper.get_databank.each_with_index do |(k, v), i|
     puts '============================================================='
     puts '                                                             '
-    puts "                      #{history[i].join}               "
+    puts "                      #{history[i]}                "
     puts '                                                             '
     puts '============================================================='
     puts
@@ -119,7 +114,6 @@ loop do
   case answer
   when choices[0]
     new_search
-
   when choices[1]
     choices = ['Data Parsed', 'Compute Data']
     answer = prompt.select('What do you want to do ?', choices)
