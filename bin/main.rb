@@ -7,48 +7,8 @@ require 'rest-client'
 require 'open-uri'
 require 'tty-prompt'
 
-require_relative 'str_content.rb'
+require_relative '../lib/flow.rb'
 require_relative '../lib/kscrapper.rb'
-
-def validate_field(field)
-  puts 'Validating Field...'
-  if field == ''
-    puts 'Error : No item to Search' if field == ''
-    puts 'Returning...'
-    return false
-  elsif field !~ /^[a-z]/
-    puts 'Error : The search must start with characters between a and z'
-    puts 'Returning...'
-    return false
-  else 
-    true
-  end
-end
-
-def validate_search(query)
-  puts 'Validating Input...'
-  result = query.split('').each_with_index { |value, index| result[index] = '+' if value == ' ' }
-  result
-end
-
-def new_search
-  loop do
-    puts
-    puts 'Type your Search'
-    search = gets.chomp.downcase
-    break unless validate_field(search)
-    
-    search = validate_search(search)
-    puts 'Searching ...'
-    result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
-    result.collect_data
-    result.clean_data
-    result.add_to_databank
-    puts "Done Colecting Data, the Search Found #{result.brute_collect_values.length} results.Press Enter to Continue..."
-    gets.chomp
-    break
-  end
-end
 
 
 Gem.win_platform? ? (system 'cls') : (system 'clear')
@@ -70,38 +30,41 @@ puts
 
 #Selection Menu
 loop do
-prompt = TTY::Prompt.new
-greeting = 'Choose an option below'
-choices = ['Search New', 'Access Databank']
-answer = prompt.select(greeting, choices)
+  prompt = TTY::Prompt.new
+  greeting = 'Choose an option below'
+  choices = ['Search New', 'Access Databank']
+  answer = prompt.select(greeting, choices)
 
-case answer
-when choices[0]
-  new_search
-
-when choices[1]
-  choices = ['Data Parsed', 'Compute Data']
-  answer = prompt.select('What do you want to do ?', choices)
   case answer
   when choices[0]
+    new_search
+
   when choices[1]
-    choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
-    answer = prompt.select('Choose Operation', choices)
+    choices = ['Data Parsed', 'Compute Data']
+    answer = prompt.select('What do you want to do ?', choices)
     case answer
-      
     when choices[0]
-      KScrapper.compute_average
-      
     when choices[1]
-      KScrapper.compute_max
+      choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
+      answer = prompt.select('Choose Operation', choices)
+      case answer  
+      when choices[0]
+        history = KScrapper.get_search_history
+        KScrapper.get_databank.map.with_index do |(key, value), index | 
+          puts "The average value of #{history[index].join.capitalize} is: #{value.inject{ |x, y| x+y} / value.length}."
+        end
+        i = 0
+      when choices[1]
+        data = KScrapper.get_databank
+        puts data
+      else
+        data = KScrapper.get_databank
+        puts data
+      end
     else
-      
+      puts 'ERROR: BAD CODE'
     end
   else
     puts 'ERROR: BAD CODE'
   end
-else
-  puts 'ERROR: BAD CODE'
-end
-
 end

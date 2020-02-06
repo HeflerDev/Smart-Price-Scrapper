@@ -4,14 +4,12 @@ require 'open-uri'
 # rubocop:disable Metrics/MethodLength,Metrics/LineLength,Style/ClassVars
 
 class KScrapper
-  attr_accessor :prices_databank
+  attr_accessor :products_databank
   attr_reader :brute_collect_values
+  
 
   @@search_history = []
   @@products_databank = {}
-
-  
-
   def initialize(website, search_term)
     @website = open(website).read
     @search_term = search_term
@@ -52,19 +50,11 @@ class KScrapper
     @@search_history.push(@search_term)
   end
 
-  def self.compute_average
-    @@products_databank.map { |_,value| value.inject {|x,y| x+y} / value.length } 
+  def self.get_search_history
+    @@search_history
   end
 
-  def self.compute_max
-    puts @@products_databank.map do |x,y|
-      y.max
-    end
-  end
-
-  def self.compute_min
-    puts @@products_databank.map do |x,y|
-      y.min
-    end
+  def self.get_databank
+    @@products_databank
   end
 end
