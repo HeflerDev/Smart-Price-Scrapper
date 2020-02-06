@@ -6,7 +6,13 @@ require 'open-uri'
 class KScrapper
   attr_accessor :products_databank
   attr_reader :brute_collect_values
+  attr_reader :brute_collect_titles
+  attr_reader :brute_collect_logistics
   attr_reader :clean_values
+  attr_reader :website
+  attr_reader :parsed_content
+  attr_reader :search_history
+  attr_reader :search_term
 
   @@search_history = []
   @@products_databank = {}
