@@ -19,7 +19,25 @@ As all capstone projects In microverse, the due time is 3 working days, but I wi
 
 To get a local copy up and running follow these simple steps :
 
-Clone or fork the <a href="https://github.com/Kasuhira/Microverse-Project-Web-Scrapper">repo</a> [https://github.com/Kasuhira/Microverse-Project-Web-Scrapper.git]
+1. Clone or fork the <a href="https://github.com/Kasuhira/Microverse-Project-Web-Scrapper">repo</a> [https://github.com/Kasuhira/Microverse-Project-Web-Scrapper.git]
+
+2. Ruby needs to be installed to run the code [check here](https://www.ruby-lang.org/en/documentation/installation/) for further steps
+
+3. Navigate to the project's root folder and run: 
+    ```
+    $ ruby /bin/main.rb
+    ```
+    for example:
+    ```
+    > $ ./bin/main.rb
+    ```
+    <i>Note:</i> The file should have executable     permissions:
+    ```
+    > $ chmod +x bin/main.rb
+    ```
+    Or you can run it using the ***ruby***     command:
+    ```
+    > $ ruby bin/main.rb example.css
 
 ## How to Use
 <p align="center">
