@@ -1,5 +1,3 @@
-
-
 # !/usr/bin/env ruby
 
 require 'nokogiri'
@@ -16,11 +14,11 @@ def validate_field(field)
   if field == ''
     puts 'Error : No item to Search' if field == ''
     puts 'Returning...'
-    return false
+    false
   elsif field !~ /^[a-z]/
     puts 'Error : The search must start with characters between a and z'
     puts 'Returning...'
-    return false
+    false
   else
     true
   end
