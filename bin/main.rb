@@ -9,7 +9,7 @@ require 'tty-prompt'
 
 require_relative '../lib/kscrapper.rb'
 
-#Encapsulations
+#Blocks
 
 def validate_field(field)
   puts 'Validating Field...'
