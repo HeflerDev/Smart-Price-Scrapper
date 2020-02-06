@@ -6,7 +6,7 @@ require 'open-uri'
 class KScrapper
   attr_accessor :products_databank
   attr_reader :brute_collect_values
-  
+  attr_reader :clean_values
 
   @@search_history = []
   @@products_databank = {}
@@ -42,7 +42,8 @@ class KScrapper
   def clean_data
     filter_data = lambda { |a| a.scan(/\d+[,.]\d+/).to_s.split('').map { |u| u == ',' ? '.' : u }.join('').scan(/\d+[,.]\d+/).map(&:to_f).inject { |k, z| (k + z) / 2 } }
     @clean_values = @brute_collect_values.map { |x| filter_data.call(x) } 
-    @clean_logistics = @brute_collect_logistics.map { |x| filter_data.call(x) } 
+    @clean_logistics = @brute_collect_logistics.map { |x| filter_data.call(x) }
+     
   end
 
   def add_to_databank
@@ -56,5 +57,9 @@ class KScrapper
 
   def self.get_databank
     @@products_databank
+  end
+
+  def get_clean_values
+    @clean_values
   end
 end
