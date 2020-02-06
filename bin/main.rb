@@ -1,6 +1,6 @@
-#!/usr/bin/env ruby
 
-# rubocop:disable Metrics/BlockNesting,Style/IfInsideElse
+
+# !/usr/bin/env ruby
 
 require 'nokogiri'
 require 'rest-client'
@@ -9,7 +9,7 @@ require 'tty-prompt'
 
 require_relative '../lib/kscrapper.rb'
 
-#Blocks
+# Blocks
 
 def validate_field(field)
   puts 'Validating Field...'
@@ -21,7 +21,7 @@ def validate_field(field)
     puts 'Error : The search must start with characters between a and z'
     puts 'Returning...'
     return false
-  else 
+  else
     true
   end
 end
@@ -32,30 +32,30 @@ def new_search
     puts 'Type your Search'
     search = gets.chomp.downcase
     break unless validate_field(search)
-    
+
     search.split('').each_with_index { |value, index| search[index] = '+' if value == ' ' }
     puts 'Searching ...'
     result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
     result.collect_data
     result.clean_data
     result.add_to_databank
-    puts "Done Colecting Data, the Search Found #{result.brute_collect_values.length} results.Press Enter to Continue..."
+    puts "Done Colecting Data,the Search Found #{result.brute_collect_values.length} results.Press Enter to Continue"
     gets.chomp
     break
   end
 end
 
 def find_average
-  history = KScrapper.get_search_history
-  KScrapper.get_databank.map.with_index do |(key, value), index | 
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.map.with_index do |(_, value), index|
     puts '~~~~~~~~~~~~~~~~~~~~~~~~~'
-    puts "The average value of #{history[index].capitalize} is: #{value.inject{ |x, y| x+y} / value.length}."
+    puts "The average value of #{history[index].capitalize} is: #{value.inject { |x, y| x + y } / value.length}."
   end
 end
 
 def find_max
-  history = KScrapper.get_search_history
-  KScrapper.get_databank.each_with_index do |(x, y), z|
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.each_with_index do |(x, y), z|
     index = y.index(y.max)
     puts "=================================| #{history[z]} |==============================="
     puts "The biggest value is : #{x[index].capitalize} that costs : #{y[index]}"
@@ -63,8 +63,8 @@ def find_max
 end
 
 def find_min
-  history = KScrapper.get_search_history
-  KScrapper.get_databank.each_with_index do |(x, y), z|
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.each_with_index do |(x, y), z|
     index = y.index(y.min)
     puts "=================================| #{history[z]} |==============================="
     puts "The biggest value is : #{x[index].capitalize} that costs : #{y[index]}"
@@ -72,8 +72,8 @@ def find_min
 end
 
 def show_data
-  history = KScrapper.get_search_history
-  KScrapper.get_databank.each_with_index do |(k, v), i|
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.each_with_index do |(k, v), i|
     puts '============================================================='
     puts '                                                             '
     puts "                      #{history[i]}                "
@@ -102,9 +102,9 @@ puts '  \=____________/   Developed by Kasuhira     )'
 puts '  / """"""""""" \                            /'
 puts " / ::::::::::::: \\                      =D -'"
 puts '|_________________|'
-puts 
+puts
 
-#Selection Menu
+# Selection Menu
 loop do
   prompt = TTY::Prompt.new
   greeting = 'Choose an option below'
@@ -123,7 +123,7 @@ loop do
     when choices[1]
       choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
       answer = prompt.select('Choose Operation', choices)
-      case answer  
+      case answer
       when choices[0]
         find_average
       when choices[1]
