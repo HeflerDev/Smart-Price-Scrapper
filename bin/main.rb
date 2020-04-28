@@ -1,3 +1,5 @@
+# !/usr/bin/env ruby
+
 require 'nokogiri'
 require 'rest-client'
 require 'open-uri'
@@ -5,109 +7,132 @@ require 'tty-prompt'
 
 require_relative '../lib/kscrapper.rb'
 
-#Welcome Section
-Gem.win_platform? ? (system "cls") : (system "clear")
+# Blocks
+
+def validate_field(field)
+  puts 'Validating Field...'
+  if field == ''
+    puts 'Error : No item to Search' if field == ''
+    puts 'Returning...'
+    false
+  elsif field !~ /^[a-z]/
+    puts 'Error : The search must start with characters between a and z'
+    puts 'Returning...'
+    false
+  else
+    true
+  end
+end
+
+def new_search
+  loop do
+    puts
+    puts 'Type your Search'
+    search = gets.chomp.downcase
+    break unless validate_field(search)
+
+    search.split('').each_with_index { |value, index| search[index] = '+' if value == ' ' }
+    puts 'Searching ...'
+    result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{search}", search)
+    result.collect_data
+    result.clean_data
+    result.add_to_databank
+    puts "Done Colecting Data,the Search Found #{result.brute_collect_values.length} results.Press Enter to Continue"
+    gets.chomp
+    break
+  end
+end
+
+def find_average
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.map.with_index do |(_, value), index|
+    puts '~~~~~~~~~~~~~~~~~~~~~~~~~'
+    puts "The average value of #{history[index].capitalize} is: #{value.inject { |x, y| x + y } / value.length}."
+  end
+end
+
+def find_max
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.each_with_index do |(x, y), z|
+    index = y.index(y.max)
+    puts "=================================| #{history[z]} |==============================="
+    puts "The biggest value is : #{x[index].capitalize} that costs : #{y[index]}"
+  end
+end
+
+def find_min
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.each_with_index do |(x, y), z|
+    index = y.index(y.min)
+    puts "=================================| #{history[z]} |==============================="
+    puts "The biggest value is : #{x[index].capitalize} that costs : #{y[index]}"
+  end
+end
+
+def show_data
+  history = KScrapper.take_search_history
+  KScrapper.take_databank.each_with_index do |(k, v), i|
+    puts '============================================================='
+    puts '                                                             '
+    puts "                      #{history[i]}                "
+    puts '                                                             '
+    puts '============================================================='
+    puts
+    k.each_with_index do |_, y|
+      puts "#{k[y]} : #{v[y]}"
+      puts '-----------------------------------------------------------------'
+    end
+  end
+end
+
+Gem.win_platform? ? (system 'cls') : (system 'clear')
 puts
 puts 'Welcome to Kasuhira Price Scrapping system, how may I be of assistance ?'
-puts 
+puts
 puts '     _________'
 puts '    / ======= \\'
-puts "   / __________\\"
+puts '   / __________\\'
 puts '  | ___________ |'
 puts '  | | -       | |'
 puts '  | |         | |'
 puts '  | |_________| |_____________________________'
 puts '  \=____________/   Developed by Kasuhira     )'
 puts '  / """"""""""" \                            /'
-puts " / ::::::::::::: \\                      =D-'"
-puts "|_________________|"
+puts " / ::::::::::::: \\                      =D -'"
+puts '|_________________|'
 puts
 
-gatter = true
-has_data = false
+# Selection Menu
+loop do
+  prompt = TTY::Prompt.new
+  greeting = 'Choose an option below'
+  choices = ['Search New', 'Access Databank']
+  answer = prompt.select(greeting, choices)
 
-  while gatter
-    prompt = TTY::Prompt.new
-    puts
-    greeting = 'Choose an option below'
-    choices = ['Search New', 'Access Databank']
-    answer = prompt.select(greeting, choices)
-    'do something' if answer == choices[0]
-
-    if answer == choices[0]
-      # Search Mode Start
-      choices = ['Fast Search','Custom Search']
-      answer  = prompt.select('Select a Search Method', choices)
-      # Fast Search Code
-      if answer == choices[0]
-        # Loop that validates Search
-        loop do
-          puts
-          puts 'Type your Search'
-          $search = gets.chomp.downcase
-          puts 'Error : No item to Search' if $search == ""
-          puts 'Error : The search must start with characters between a and z' unless $search =~ /^[a-z]/
-          break if $search =~ /^[a-z]/ 
-        end
-        # Guarantee HTML adress Validation
-        $search.split('').each_with_index {|value, index| $search[index] = '+' if value == ' '}
-        puts 'Searching ...'
-        result = KScrapper.new("https://www.ebay.com/sch/i.html?_from=R40&_nkw=#{$search}", $search).collect_data
-        puts 'Done Collecting Data, Saved to Temporary Files.Press enter to continue.'
-        gets.chomp
-        has_data = true
-        Gem.win_platform? ? (system "cls") : (system "clear")
+  case answer
+  when choices[0]
+    new_search
+  when choices[1]
+    choices = ['Data Parsed', 'Compute Data']
+    answer = prompt.select('What do you want to do ?', choices)
+    case answer
+    when choices[0]
+      show_data
+    when choices[1]
+      choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
+      answer = prompt.select('Choose Operation', choices)
+      case answer
+      when choices[0]
+        find_average
+      when choices[1]
+        find_max
       else
-        puts '===============================| UNAVAIABLE |=====================================.'
-        puts '|The Custom Search will be implemented shortly, it will come with features that   |'
-        puts '|takes searching parameters and return\'s the result based on what was chosen,    |'
-        puts '|like rating, costs, etc. Press enter to continue.                                |'
-        puts '==================================================================================:'
-        gets.chomp
+        find_min
       end
-
     else
-
-      if has_data
-        choices = ['Data Parsed', 'Compute Data']
-        answer = prompt.select('What do you want to do ?', choices)
-
-        if answer == choices[0]
-          choices = ['Search Databank', 'Product Databank']
-          answer = prompt.select('Which of the Banks ?', choices)
-          if answer == choices[0]
-            KScrapper.show_databank(0)
-          else
-            KScrapper.show_databank(1)
-          end
-        else
-          choices = ['Return Average Value', 'Return Biggest Value', 'Return Lowest Value']
-          answer = prompt.select('Choose Operation', choices)
-
-          if answer == choices[0]
-            KScrapper.compute_average
-          
-          elsif answer == choices[1]
-            KScrapper.compute_biggest
-          else
-            KScrapper.compute_smallest
-          end  
-        
-        end
-
-      else
-        puts 'No data to Analyze'
-        gets.chomp
-      end
-
+      puts 'ERROR: BAD CODE'
     end
-
+  else
+    puts 'ERROR: BAD CODE'
   end
-
-puts "Operation terminated at #{Time.now}"
-gets.chomp
-
-
-
-
-
+end

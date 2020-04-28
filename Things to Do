@@ -1,0 +1,12 @@
+
+Your README.md file should contain information about setting up and running it as well.
+
+
+
+It is a best practice to write tests for your methods.
+
+ Install RSpec and write some tests.
+ 
+ All of your files contains dom manipulations. It's a good practice to separate your app logic from dom manipulation so you should have a separate file meant for dom manipulation methods like chomp, puts etc
+ 
+ Fix all these and request for a re-review. Your next pull request should contain a description of what you have done (i.e. itemise the changes you have made and what it can do)You should be certified a master in one last re-review. Good luck!
